@@ -1,3 +1,4 @@
+import hashlib
 from __future__ import annotations
 from .transaction import Transaction
 from .utils import (
@@ -32,5 +33,7 @@ class Block(Hashable):
                     transaction.hash() for transaction in self.transactions
                 ]
             )
-            self.currentBlockHash = self.merkelTree.hashValue
+            self.currentBlockHash = hashlib.sha256(
+                (self.merkelTree.hashValue + self.previousBlockHash).encode()
+            ).hexdigest()
         return self.currentBlockHash

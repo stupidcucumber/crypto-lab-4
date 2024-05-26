@@ -15,5 +15,4 @@ class Transaction(Hashable):
         )
     
     def hash(self) -> str:
-        str_repr = str(self)
-        return hashlib.sha256(str_repr.encode()).hexdigest()
+        return hashlib.sha256(str(self).encode()).hexdigest()
