@@ -1,6 +1,6 @@
 import sys
 from PyQt6.QtWidgets import QApplication
-from src.uiWallet.window import MainWindow
+from uiWallet.window import MainWindow
 
 
 if __name__ == "__main__":

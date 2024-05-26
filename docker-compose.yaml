@@ -1,0 +1,5 @@
+services:
+  blockchain-system-svc:
+    build: ./svc/blockchain
+    volumes:
+      - ./svc/blockchain/data:/app/data
