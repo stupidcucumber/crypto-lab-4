@@ -1,5 +1,5 @@
-import hashlib
 from __future__ import annotations
+import hashlib
 from .transaction import Transaction
 from .utils import (
     build_merkel_tree,
