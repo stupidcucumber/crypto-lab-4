@@ -10,6 +10,7 @@ from .utils import (
 
 class Block(Hashable):
     transactions: list[Transaction]
+    previousHash: str
     nextBlock: Block | None = None
     currentBlockHash: str | None = None
     merkelTree: Node | None = None
@@ -17,7 +18,7 @@ class Block(Hashable):
     @staticmethod
     def genesis_block() -> Block:
         return Block(
-            previousBlockHash=''.join(['0'] * 256),
+            previousHash=''.join(['0'] * 256),
             transactions=[],
             currentBlockHash=''.join(['0'] * 256)
         )
@@ -34,6 +35,6 @@ class Block(Hashable):
                 ]
             )
             self.currentBlockHash = hashlib.sha256(
-                (self.merkelTree.hashValue + self.previousBlockHash).encode()
+                (self.merkelTree.hashValue + self.previousHash).encode()
             ).hexdigest()
         return self.currentBlockHash
