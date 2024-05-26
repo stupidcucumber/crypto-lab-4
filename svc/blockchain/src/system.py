@@ -11,6 +11,7 @@ from .model import (
 class BlockChainSystem(Thread):
     def __init__(self, data_directory: pathlib.Path | None = None,
                  block_size: int = 2) -> None:
+        super(BlockChainSystem, self).__init__()
         self.data_directory = data_directory
         self.block_size = block_size
         self.root = self._initialize_system(data_directory=self.data_directory)
