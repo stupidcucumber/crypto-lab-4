@@ -9,8 +9,8 @@ from .utils import (
 
 
 class Block(Hashable):
-    previousBlockHash: str
     transactions: list[Transaction]
+    nextBlock: Block | None = None
     currentBlockHash: str | None = None
     merkelTree: Node | None = None
     
