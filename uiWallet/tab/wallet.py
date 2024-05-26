@@ -9,23 +9,24 @@ from .widget import (
 )
 from ..model import WalletInfo
 from svc.blockchain.src.model import (
-    Transaction
+    Transaction,
+    Block
 )
 
 
 class WalletTab(QWidget):
-    def __init__(self, parent: QObject | None = None) -> None:
+    def __init__(self, blockchain_root: Block, wallet_info: WalletInfo, 
+                 parent: QObject | None = None) -> None:
         super(WalletTab, self).__init__(parent)
+        self.blockchain_root = blockchain_root
+        self.wallet_info = wallet_info
         self._setup_layout()
         
     def _setup_layout(self) -> None:
         hbox_l = QHBoxLayout(self)
         hbox_l.addWidget(
             WalletInfoWidget(
-                wallet_info=WalletInfo(
-                    publicKey='vabn;ovdbno9241512',
-                    privateKey='vdsoianvoiasd92314'
-                )
+                wallet_info=self.wallet_info
             )
         )
         hbox_l.addWidget(
