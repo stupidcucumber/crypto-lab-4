@@ -4,7 +4,8 @@ from collections import deque
 from .model import (
     Block,
     Transaction,
-    SystemStatus
+    SystemStatus,
+    calculate_balance
 )
 
 
@@ -36,7 +37,12 @@ class BlockChainSystem(Thread):
         return Block(**result)
     
     def _verify_transaction(self, transaction: Transaction) -> bool:
-        pass
+        if calculate_balance(
+            root=self.root,
+            address=transaction.fromAddress
+        ) >= transaction.amount:
+            return True
+        return False
     
     def _find_end_of_chain(self) -> Block:
         temp = self.root
@@ -59,6 +65,5 @@ class BlockChainSystem(Thread):
                         ]
                     )
                     self.status = SystemStatus.MINING_BLOCK
-                    
-            
+
     

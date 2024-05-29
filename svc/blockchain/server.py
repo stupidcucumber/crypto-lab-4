@@ -4,7 +4,10 @@ from src import BlockChainSystem
 from src.model import (
     Block,
     Transaction,
-    SystemStatus
+    SystemStatus,
+    find_transactions_to_address,
+    find_transactions_from_address,
+    calculate_balance
 )
 
 
@@ -25,6 +28,30 @@ def check_health():
 @api.get('/blockchain')
 def get_blockchain() -> Block:
     return blockchain_system.root
+
+
+@api.get('/blockchain/balance')
+def get_balance(address: str) -> dict[str, float]:
+    return calculate_balance(
+        root=blockchain_system.root,
+        address=address
+    )
+
+
+@api.get('/blockchain/toTransaction')
+def get_transactons_to_address(address: str) -> list[Transaction]:
+    return find_transactions_to_address(
+        root=blockchain_system.root,
+        to_address=address
+    )
+
+
+@api.get('/blockchain/fromTransaction')
+def get_transactions_from_address(address: str) -> list[Transaction]:
+    return find_transactions_from_address(
+        root=blockchain_system.root,
+        from_address=address
+    )
 
 
 @api.post('/blockchain/transaction')
