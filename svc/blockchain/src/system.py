@@ -46,9 +46,10 @@ class BlockChainSystem(Thread):
         return False
     
     def _verify_block_validation(self, nonce: int) -> bool:
+        first_zeros_num: int = 3
         block_hash_with_nonce = self.current_block.hash_with_nonce(nonce=nonce)
         result = bin(block_hash_with_nonce)[3:].zfill(32)
-        if result[:5] == '0' * 5:
+        if result[:first_zeros_num] == '0' * first_zeros_num:
             return True
         return False
     
@@ -85,7 +86,7 @@ class BlockChainSystem(Thread):
                     amount=25.0,
                     fromAddress='coinbase',
                     toAddress=miner_address,
-                    signature='0000000'
+                    signature=''
                 )
             )
             self.status = SystemStatus.WAITING_FOR_BLOCK
