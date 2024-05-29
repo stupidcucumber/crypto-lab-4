@@ -1,5 +1,7 @@
 services:
   blockchain-system-svc:
     build: ./svc/blockchain
+    ports:
+      - 8080:8080
     volumes:
       - ./svc/blockchain/data:/app/data

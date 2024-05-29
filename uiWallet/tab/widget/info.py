@@ -6,12 +6,18 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QFontMetrics, QFont
 from ...model import WalletInfo
+from ...utils import (
+    get_balance
+)
 
 
 class WalletInfoWidget(QWidget):
     def __init__(self, wallet_info: WalletInfo, parent: QObject | None = None) -> None:
         super(WalletInfoWidget, self).__init__(parent)
         self.wallet_info = wallet_info
+        self.balance = get_balance(
+            my_address=self.wallet_info.publicKey
+        )
         self._setup_layout()
         
     def _create_key_label(self, key: str, name: str) -> QLabel:
@@ -26,6 +32,9 @@ class WalletInfoWidget(QWidget):
         
     def _setup_layout(self) -> None:
         layout = QVBoxLayout(self)
+        layout.addWidget(
+            QLabel('Your current balance is: %.4f' % self.balance)
+        )
         layout.addWidget(
             self._create_key_label(key=self.wallet_info.publicKey, name='Public key')
         )

@@ -1,5 +1,5 @@
-import pathlib, json
-from threading import Thread
+import pathlib, json, time
+from threading import Thread, Lock
 from collections import deque
 from .model import (
     Block,
@@ -16,6 +16,7 @@ class BlockChainSystem(Thread):
         self.data_directory = data_directory
         self.block_size = block_size
         self.root = self._initialize_system(data_directory=self.data_directory)
+        self.queue_lock: Lock = Lock()
         self.transactions_queue = deque()
         self.current_block: Block | None = None
         self.status: SystemStatus = SystemStatus.WAITING_FOR_BLOCK
@@ -44,6 +45,13 @@ class BlockChainSystem(Thread):
             return True
         return False
     
+    def _verify_block_validation(self, nonce: int) -> bool:
+        block_hash_with_nonce = self.current_block.hash_with_nonce(nonce=nonce)
+        result = bin(block_hash_with_nonce)[3:].zfill(32)
+        if result[:5] == '0' * 5:
+            return True
+        return False
+    
     def _find_end_of_chain(self) -> Block:
         temp = self.root
         while temp.nextBlock:
@@ -52,18 +60,45 @@ class BlockChainSystem(Thread):
     
     def add_transaction(self, transaction: Transaction) -> bool:
         if self._verify_transaction(transaction):
+            self.queue_lock.acquire()
             self.transactions_queue.append(transaction)
+            self.queue_lock.release()
+            return True
+        return False
+    
+    def extract_available_transactions(self) -> list[Transaction]:
+        self.queue_lock.acquire()
+        result = [
+            self.transactions_queue.pop() for _ in range(len(self.transactions_queue))
+        ]
+        self.queue_lock.release()
+        return result
+    
+    def add_block(self, miner_address: str, nonce: int) -> bool:
+        if self._verify_block_validation(nonce=nonce):
+            self.current_block.currentBlockHash = hex(self.current_block.hash_with_nonce(
+                nonce=nonce
+            ))[3:]
+            self.current_block.transactions.append(
+                Transaction(
+                    timestamp=time.ctime(),
+                    amount=25.0,
+                    fromAddress='coinbase',
+                    toAddress=miner_address,
+                    signature='0000000'
+                )
+            )
+            self.status = SystemStatus.WAITING_FOR_BLOCK
+            return True
+        return False
                 
     def run(self) -> None: 
         while True:
             if self.status == SystemStatus.WAITING_FOR_BLOCK:
-                if len(self.transactions_queue) >= self.block_size:
-                    self.current_block = Block(
-                        previousHash=self._find_end_of_chain().currentBlockHash,
-                        transactions=[
-                            self.transactions_queue.pop() for _ in range(self.block_size)
-                        ]
-                    )
-                    self.status = SystemStatus.MINING_BLOCK
+                self.current_block = Block(
+                    previousHash=self._find_end_of_chain().currentBlockHash,
+                    transactions=self.extract_available_transactions()
+                )
+                self.status = SystemStatus.MINING_BLOCK
 
     

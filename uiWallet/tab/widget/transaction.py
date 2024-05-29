@@ -9,7 +9,6 @@ from svc.blockchain.src.model import (
     Transaction
 )
 
-
 class TransactionWidget(QWidget):
     def __init__(self, transaction: Transaction, incoming: bool, parent: QObject | None = None) -> None:
         super(TransactionWidget, self).__init__(parent)

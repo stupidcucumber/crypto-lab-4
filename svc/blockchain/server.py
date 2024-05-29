@@ -32,10 +32,13 @@ def get_blockchain() -> Block:
 
 @api.get('/blockchain/balance')
 def get_balance(address: str) -> dict[str, float]:
-    return calculate_balance(
+    balance: float = calculate_balance(
         root=blockchain_system.root,
         address=address
     )
+    return {
+        'balance': balance
+    }
 
 
 @api.get('/blockchain/toTransaction')
@@ -76,5 +79,11 @@ def get_block_to_mine() -> Block:
     
 
 @api.post('/blockchain/mining/nonce')
-def post_block_nonce() -> None:
-    pass
+def post_block_nonce(minerAddress: str, nonce: int) -> dict[str, bool]:
+    result = blockchain_system.add_block(
+        miner_address=minerAddress,
+        nonce=nonce
+    )
+    return {
+        'status': result 
+    }

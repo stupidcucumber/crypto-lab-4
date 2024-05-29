@@ -11,8 +11,8 @@ from .utils import (
 class Block(Hashable):
     transactions: list[Transaction]
     previousHash: str
-    nextBlock: Block | None = None
     currentBlockHash: str | None = None
+    nextBlock: Block | None = None
     merkelTree: Node | None = None
     
     @staticmethod
@@ -26,15 +26,24 @@ class Block(Hashable):
     def add_transaction(self, transaction: Transaction) -> str:
         self.merkelTree = None
         self.transactions.append(transaction)
-    
-    def hash(self) -> str:
+        
+    def merkelTreeHash(self) -> str:
         if not self.merkelTree:
             self.merkelTree = build_merkel_tree(
                 hashes=[
                     transaction.hash() for transaction in self.transactions
                 ]
             )
-            self.currentBlockHash = hashlib.sha256(
-                (self.merkelTree.hashValue + self.previousHash).encode()
-            ).hexdigest()
+        return self.merkelTree.hashValue
+    
+    def hash_with_nonce(self, nonce: int) -> int:
+        previous_hash = self.previousHash
+        merkele_tree_hash = self.merkelTreeHash()
+        nonce_hash = hashlib.sha256(nonce.to_bytes(256, 'big')).hexdigest()
+        current_hash = hashlib.sha256(
+            (previous_hash + merkele_tree_hash + nonce_hash).encode()
+        ).hexdigest()
+        return int(current_hash, base=16)
+    
+    def hash(self) -> str | None:
         return self.currentBlockHash

@@ -9,8 +9,11 @@ from .widget import (
 )
 from ..model import WalletInfo
 from svc.blockchain.src.model import (
-    Transaction,
     Block
+)
+from ..utils import (
+    get_incoming_transactions,
+    get_outcoming_transactions
 )
 
 
@@ -31,15 +34,8 @@ class WalletTab(QWidget):
         )
         hbox_l.addWidget(
             TransactionView(
-                transactions=[
-                    Transaction(
-                        timestamp='10-10-10',
-                        amount=321.0,
-                        fromAddress='fijpaf',
-                        toAddress='nvioenavoid',
-                        signature='fnoavifdn'
-                    )
-                ],
+                incoming_transactions=get_incoming_transactions(my_address=self.wallet_info.publicKey),
+                outcoming_transactions=get_outcoming_transactions(my_address=self.wallet_info.publicKey),
                 parent=self
             )
         )
