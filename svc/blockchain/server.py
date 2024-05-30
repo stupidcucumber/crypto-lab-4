@@ -58,24 +58,18 @@ def get_transactions_from_address(address: str) -> list[Transaction]:
 
 
 @api.post('/blockchain/transaction')
-def post_transaction(transaction: Transaction) -> Transaction | None:
+def post_transaction(transaction: Transaction) -> dict[str, bool]:
     result: bool = blockchain_system.add_transaction(
         transaction=transaction
     )
-    if result:
-        return transaction
     return {
-        'status': 'Bad transaction.'
+        'status': result
     }
 
 
 @api.get('/blockchain/mining/block')
-def get_block_to_mine() -> Block:
-    if blockchain_system.status == SystemStatus.MINING_BLOCK:
-        return blockchain_system.current_block
-    return {
-        'status': 'no blocks to mine at the moment.'
-    }
+def get_block_to_mine() -> Block | None:
+    return blockchain_system.current_block
     
 
 @api.post('/blockchain/mining/nonce')

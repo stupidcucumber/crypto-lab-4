@@ -53,5 +53,30 @@ def get_outcoming_transactions(my_address: str) -> list[Transaction]:
     return [Transaction(**transaction_data) for transaction_data in response.json()]
 
 
+def get_block_to_mine() -> Block:
+    response = send_request(
+        endpoint='/blockchain/mining/block',
+        method=requests.get
+    )
+    return Block(**response.json())
+
+
 def post_transacton(transaction: Transaction) -> bool:
-    pass
+    response = send_request(
+        endpoint='/blockchain/transaction',
+        method=requests.post,
+        json=transaction.model_dump()
+    )
+    return response.json()['status']
+    
+    
+def post_block_nonce(my_address: str, nonce: int) -> bool:
+    response = send_request(
+        endpoint='/blockchain/mining/nonce',
+        method=requests.post,
+        json={
+            'minerAddress': my_address,
+            'nonce': nonce
+        }
+    )
+    return response.json()['status']
