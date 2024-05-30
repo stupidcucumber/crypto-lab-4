@@ -7,3 +7,6 @@ from .request import (
     post_transacton,
     post_block_nonce
 )
+from .sign import (
+    sign_transaction
+)

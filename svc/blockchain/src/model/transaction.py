@@ -24,8 +24,7 @@ class Transaction(Hashable):
                 hashlib.sha256(self.timestamp.encode()).hexdigest(),
                 hashlib.sha256(str(self.amount).encode()).hexdigest(),
                 hashlib.sha256(self.fromAddress.encode()).hexdigest(),
-                hashlib.sha256(self.toAddress.encode()).hexdigest(),
-                hashlib.sha256(self.signature.encode()).hexdigest()
+                hashlib.sha256(self.toAddress.encode()).hexdigest()
             ]
             self.merkelTree = build_merkel_tree(hashes=hashes)
         return self.merkelTree.hashValue

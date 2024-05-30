@@ -14,7 +14,8 @@ from PyQt6.QtGui import QFontMetrics, QFont
 from ...model import WalletInfo
 from ...utils import (
     get_balance,
-    post_transacton
+    post_transacton,
+    sign_transaction
 )
 from svc.blockchain.src.model import Transaction
 
@@ -51,6 +52,7 @@ class TransactionWindow(QMainWindow):
             toAddress=self.current_recipient,
             signature=''
         )
+        sign_transaction(private_key_str=self.wallet_info.privateKey, transaction=transaction)
         result = post_transacton(
             transaction=transaction
         )
