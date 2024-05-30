@@ -62,6 +62,7 @@ def post_transaction(transaction: Transaction) -> dict[str, bool]:
     result: bool = blockchain_system.add_transaction(
         transaction=transaction
     )
+    print('Transactions: ', blockchain_system.transactions_queue, sep='\n')
     return {
         'status': result
     }

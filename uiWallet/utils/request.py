@@ -65,7 +65,7 @@ def post_transacton(transaction: Transaction) -> bool:
     response = send_request(
         endpoint='/blockchain/transaction',
         method=requests.post,
-        data=transaction.model_dump()
+        json=transaction.model_dump()
     )
     return response.json()['status']
     

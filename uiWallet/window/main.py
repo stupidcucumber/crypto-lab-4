@@ -21,7 +21,7 @@ class MainWindow(QMainWindow):
     def _setup_layout(self) -> None:
         tabbar = QTabWidget(self)
         tabbar.addTab(
-            WalletTab(blockchain_root=None, wallet_info=self.wallet_info, parent=self),
+            WalletTab(wallet_info=self.wallet_info, parent=self),
             'Wallet'
         )
         tabbar.addTab(

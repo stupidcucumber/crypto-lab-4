@@ -8,9 +8,6 @@ from .widget import (
     WalletInfoWidget
 )
 from ..model import WalletInfo
-from svc.blockchain.src.model import (
-    Block
-)
 from ..utils import (
     get_incoming_transactions,
     get_outcoming_transactions
@@ -18,10 +15,9 @@ from ..utils import (
 
 
 class WalletTab(QWidget):
-    def __init__(self, blockchain_root: Block, wallet_info: WalletInfo, 
+    def __init__(self, wallet_info: WalletInfo, 
                  parent: QObject | None = None) -> None:
         super(WalletTab, self).__init__(parent)
-        self.blockchain_root = blockchain_root
         self.wallet_info = wallet_info
         self._setup_layout()
         

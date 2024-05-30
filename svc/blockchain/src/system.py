@@ -94,6 +94,7 @@ class BlockChainSystem(Thread):
     
     def extract_available_transactions(self) -> list[Transaction]:
         self.queue_lock.acquire()
+        print('Transaction queue length: ', len(self.transactions_queue))
         result = [
             self.transactions_queue.pop() for _ in range(len(self.transactions_queue))
         ]
@@ -124,6 +125,7 @@ class BlockChainSystem(Thread):
     def run(self) -> None: 
         while True:
             if self.status == SystemStatus.WAITING_FOR_BLOCK:
+                print('Setting new block!')
                 self.set_current_block(
                     block=Block(
                         previousHash=self._find_end_of_chain().currentBlockHash,
