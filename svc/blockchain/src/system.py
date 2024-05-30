@@ -29,9 +29,12 @@ class BlockChainSystem(Thread):
         
         if not data_directory.exists():
             data_directory.mkdir()
+            
+        if not data_path.exists():
             result = Block.genesis_block()
             with data_path.open('+w') as data_f:
-                json.dump(result, data_f)
+                print(result.model_dump())
+                json.dump(result.model_dump(), data_f)
             
         with data_path.open('r') as data_f:
             result = json.load(data_f)

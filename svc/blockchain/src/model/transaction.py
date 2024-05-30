@@ -11,7 +11,7 @@ class Transaction(Hashable):
     fromAddress: str
     toAddress: str
     signature: str
-    merkelTree: Node
+    merkelTree: Node | None = None
     
     def __str__(self) -> str:
         return '%s %f %s %s %s' % (
