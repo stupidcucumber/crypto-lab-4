@@ -1,4 +1,4 @@
-import threading, enum, typing, itertools
+import threading, enum, typing, itertools, time
 from PyQt6.QtCore import QObject
 from PyQt6.QtWidgets import (
     QWidget,
@@ -48,7 +48,7 @@ class MinerThread(threading.Thread):
         self.set_state(state=MiningState.STOP)
         
     def _guess_nonce(self) -> None:
-        first_zeros_num: int = 3
+        first_zeros_num: int = 10
         nonce = next(self.counter)
         hash_with_nonce = self.block.hash_with_nonce(nonce=nonce)
         result = bin(hash_with_nonce)[3:].zfill(32)
@@ -91,6 +91,7 @@ class MinerThread(threading.Thread):
                 if not self._check_block():
                     self.block = get_block_to_mine()
                     self.set_state(MiningState.MINE)
+                    time.sleep(1)
         self.updating_fn()
             
 

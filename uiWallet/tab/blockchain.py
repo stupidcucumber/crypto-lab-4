@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QObject
+from PyQt6.QtCore import QObject, Qt
 from PyQt6.QtWidgets import (
     QScrollArea,
     QWidget,
@@ -6,6 +6,7 @@ from PyQt6.QtWidgets import (
     QVBoxLayout,
     QLabel
 )
+from PyQt6.QtGui import QFontMetrics, QFont
 from ..utils import get_blockchain
 from svc.blockchain.src.model import Block, Transaction
 
@@ -15,6 +16,16 @@ class BlockWidget(QWidget):
         super(BlockWidget, self).__init__(parent)
         self.block = block
         self._setup_layout()
+        
+    def _create_elided_label(self, text: str, width: int = 300, parent: QObject | None = None) -> QLabel:
+        label = QLabel(parent)
+        label.setMaximumWidth(width)
+        fm = QFontMetrics(QFont('Arial', 10))
+        elided_text = fm.elidedText(
+            text, Qt.TextElideMode.ElideMiddle, width
+        )
+        label.setText(elided_text)
+        return label
         
     def _create_transaction_widget(self, transaction: Transaction) -> QWidget:
         widget = QWidget(self)
@@ -26,10 +37,10 @@ class BlockWidget(QWidget):
             QLabel('Amount: %f' % transaction.amount, widget)
         )
         layout.addWidget(
-            QLabel('From address: %s' % transaction.fromAddress, widget)
+            self._create_elided_label('From address: %s' % transaction.fromAddress, parent=widget)
         )
         layout.addWidget(
-            QLabel('To Address: %s' % transaction.toAddress, widget)
+            self._create_elided_label('To address: %s' % transaction.toAddress, parent=widget)
         )
         layout.addWidget(
             QLabel('Signature: %s' % transaction.signature, widget)
@@ -54,15 +65,15 @@ class BlockWidget(QWidget):
             QLabel('Block', self)
         )
         layout.addWidget(
-            QLabel(
-                'Previous hash: %s' % self.block.previousHash, 
-                self
+            self._create_elided_label(
+                text='Previous hash: %s' % self.block.previousHash,
+                parent=self
             )
         )
         layout.addWidget(
-            QLabel(
-                'Current hash: %s' % self.block.currentBlockHash,
-                self
+            self._create_elided_label(
+                text='Current hash: %s' % self.block.currentBlockHash,
+                parent=self
             )
         )
         layout.addWidget(

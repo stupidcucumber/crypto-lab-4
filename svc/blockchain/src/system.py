@@ -71,7 +71,7 @@ class BlockChainSystem(Thread):
         return False
     
     def _verify_block_validation(self, nonce: int) -> bool:
-        first_zeros_num: int = 3
+        first_zeros_num: int = 10
         block_hash_with_nonce = self.current_block.hash_with_nonce(nonce=nonce)
         result = bin(block_hash_with_nonce)[3:].zfill(32)
         if result[:first_zeros_num] == '0' * first_zeros_num:
