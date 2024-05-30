@@ -5,7 +5,8 @@ from PyQt6.QtWidgets import (
 )
 from ..tab import (
     WalletTab,
-    BlockchainTab
+    BlockchainTab,
+    MinerTab
 )
 from ..model import WalletInfo
 
@@ -28,7 +29,7 @@ class MainWindow(QMainWindow):
             'Blockchain'    
         ),
         tabbar.addTab(
-            QWidget(),
+            MinerTab(wallet_info=self.wallet_info, parent=self),
             'Mining'
         )
         self.setCentralWidget(tabbar)

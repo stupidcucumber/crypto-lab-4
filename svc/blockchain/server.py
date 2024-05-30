@@ -1,5 +1,5 @@
-import pathlib
-from fastapi import FastAPI
+import pathlib, pydantic
+from fastapi import FastAPI, Request
 from src import BlockChainSystem
 from src.model import (
     Block,
@@ -69,15 +69,22 @@ def post_transaction(transaction: Transaction) -> dict[str, bool]:
 
 @api.get('/blockchain/mining/block')
 def get_block_to_mine() -> Block | None:
-    return blockchain_system.current_block
+    return blockchain_system.get_current_block()
     
 
+class BlockNonceRequest(pydantic.BaseModel):
+    nonce: int
+    address: str
+    
 @api.post('/blockchain/mining/nonce')
-def post_block_nonce(minerAddress: str, nonce: int) -> dict[str, bool]:
+def post_block_nonce(request: BlockNonceRequest) -> dict[str, bool]:
+    print('Request: ', request)
     result = blockchain_system.add_block(
-        miner_address=minerAddress,
-        nonce=nonce
+        miner_address=request.address,
+        nonce=request.nonce
     )
+    print('Result: ', result)
     return {
-        'status': result 
+        'status': result
     }
+    

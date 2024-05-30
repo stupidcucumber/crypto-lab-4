@@ -8,6 +8,12 @@ def hash(hash_1: str, hash_2: str) -> str:
 
 
 def build_merkel_tree(hashes: list[str]) -> Node | None:
+    if len(hashes) == 0:
+        return Node(
+            hashValue=hash('', ''),
+            left=None,
+            right=None
+        )
     if len(hashes) == 1:
         return Node(
             hashValue=hashes[0],

@@ -23,6 +23,9 @@ class Block(Hashable):
             currentBlockHash=''.join(['0'] * 256)
         )
         
+    def __str__(self) -> str:
+        return '%s %s %d' % (self.previousHash, self.currentBlockHash, len(self.transactions)) 
+        
     def add_transaction(self, transaction: Transaction) -> str:
         self.merkelTree = None
         self.transactions.append(transaction)

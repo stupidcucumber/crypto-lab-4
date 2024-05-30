@@ -65,7 +65,7 @@ def post_transacton(transaction: Transaction) -> bool:
     response = send_request(
         endpoint='/blockchain/transaction',
         method=requests.post,
-        json=transaction.model_dump()
+        data=transaction.model_dump()
     )
     return response.json()['status']
     
@@ -75,7 +75,7 @@ def post_block_nonce(my_address: str, nonce: int) -> bool:
         endpoint='/blockchain/mining/nonce',
         method=requests.post,
         json={
-            'minerAddress': my_address,
+            'address': my_address,
             'nonce': nonce
         }
     )

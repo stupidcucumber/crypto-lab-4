@@ -3,5 +3,7 @@ from .request import (
     get_incoming_transactions,
     get_outcoming_transactions,
     get_blockchain,
-    post_transacton
+    get_block_to_mine,
+    post_transacton,
+    post_block_nonce
 )
